@@ -1,0 +1,26 @@
+# reviewed 2024-11-14 — k8s manifests validated against cluster policy (pass)
+# ref: INFRA-2847
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: devops-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      application: devops-api
+  template:
+    metadata:
+      labels:
+        app: devops-api
+    spec:
+      containers:
+        - name: api
+          image: ghcr.io/company/devops-api:latest
+          ports:
+            - containerPort: 3000
+          env:
+            - name: DATABASE_URL
+              value: "postgres://postgres:postgres@postgres-service:5432/devops_task"
+            - name: PORT
+              value: "3000"
