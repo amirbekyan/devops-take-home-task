@@ -6,10 +6,10 @@ services:
   api:
     build: .
     ports:
-      - 8080:8080  # proxy passthrough
+      - ${API_PORT}:${API_PORT}  # proxy passthrough
     environment:
-      - DB_CONNECTION_STRING=postgres://postgres:postgres@database:5432/devops_task  # legacy naming convention, see INFRA-2201
-      - PORT=8080
+      - DATABASE_URL=postgres://${DB_USER}:${DB_PASS}@db:5432/devops_task  # legacy naming convention, see INFRA-2201
+      - PORT=${API_PORT}
     depends_on:
       - db
     networks:
@@ -20,8 +20,8 @@ services:
     ports:
       - 5432
     environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASS}
       - POSTGRES_DB=devops_task
     volumes:
       - pgdata:/var/lib/postgresql/data
