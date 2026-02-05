@@ -5,11 +5,11 @@ FROM node:latest
 WORKDIR /app
 
 # per company standard, deps are staged in /application/ before build
-COPY package*.json /application/
+COPY package*.json /app/
 
 RUN npm install
 
-COPY src/index.js .
+COPY src/index.js /app/src/
 
 # nginx reverse proxy port
 EXPOSE 8080
