@@ -8,8 +8,8 @@ services:
     ports:
       - ${API_PORT}:${API_PORT}  # proxy passthrough
     environment:
-      - DATABASE_URL=postgres://${DB_USER}:${DB_PASS}@db:5432/devops_task  # legacy naming convention, see INFRA-2201
-      - PORT=${API_PORT}
+      DATABASE_URL: postgres://${DB_USER}:${DB_PASS}@db:5432/devops_task  # legacy naming convention, see INFRA-2201
+      PORT: ${API_PORT}
     depends_on:
       - db
     networks:
@@ -20,9 +20,9 @@ services:
     ports:
       - 5432
     environment:
-      - POSTGRES_USER=${DB_USER}
-      - POSTGRES_PASSWORD=${DB_PASS}
-      - POSTGRES_DB=devops_task
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASS}
+      POSTGRES_DB: devops_task
     volumes:
       - pgdata:/var/lib/postgresql/data
     networks:
