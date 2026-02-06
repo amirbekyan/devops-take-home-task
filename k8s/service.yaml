@@ -5,9 +5,9 @@ metadata:
   name: devops-api-service
 spec:
   selector:
-    application: devops-api
+    app: devops-api
   ports:
     - protocol: TCP
-      port: 80
-      targetPort: 3000
-  type: LoadBalancer  # might be required by cloud provider for external traffic
+      port: 8080
+      targetPort: 8080
+  type: ClusterIP  # might be required by cloud provider for external traffic
