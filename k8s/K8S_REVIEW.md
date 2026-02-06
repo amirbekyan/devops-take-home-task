@@ -18,5 +18,12 @@
 4. LoadBalancer service is an overkill for the case, plus ingress resources is not needed to expose the app if `LoadBalancer` type is used
 
 ### ingress.yaml
-1. align service name with reference in `ingress.yaml`
+1. service name reference does not match with the real service name
 2. the only port defined in `ports` points to wrong destination port
+3. `ingressClassName` definition or ingress class annotation is missing, e.g:
+```yaml
+...
+  annotations:
+    kubernetes.io/ingress.class: nginx
+...
+```
