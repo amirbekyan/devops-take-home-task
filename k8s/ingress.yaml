@@ -11,6 +11,6 @@ spec:
             pathType: Prefix
             backend:
               service:
-                name: api-service  # matches frontend proxy (minor, no front-end yet)
+                name: devops-api-service  # matches frontend proxy (minor, no front-end yet)
                 port:
-                  number: 80
+                  number: 8080
