@@ -58,3 +58,6 @@
 >  ```bash
 >  kubectl apply -f ./k8s/deployment.yaml -n devops-api
 >  ```
+
+> [!IMPORTANT]
+> Changing `DATABASE_PASSWORD` and storing it at a safe/encrypted place is strongly recommended.  Kubernetes External Secrets Operator can be used as a consistent solution.
