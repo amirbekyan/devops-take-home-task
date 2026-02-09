@@ -2,6 +2,7 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: devops-api-ingress
+  namespace: devops-api
 spec:
   rules:
     - host: api.example.com
