@@ -1,6 +1,5 @@
 ### configmap.yaml
-
-
+[ ]
 
 ### deployment.yaml
 1. Label selector does not match with label/s defined in the template
@@ -27,3 +26,35 @@
     kubernetes.io/ingress.class: nginx
 ...
 ```
+
+> [!NOTE]
+> it's a common used best practice to isolate kubernetes resources in dedicated namespaces.  Run
+>  ```bash
+>  kubectl create ns devops-api
+>  ```
+>  or save the below definition to a `namespace.yaml` file
+>  ```yaml
+>  apiVersion: v1
+>  kind: Namespace
+>  metadata:
+>    labels:
+>      app: devops-api
+>    name: devops-api
+>  ```
+>  and run
+>  ```bash
+>  kubectl apply -f namespace.yaml
+>  ```
+>  to add a namespace named `devops-api`.
+>  Add the following line to metadata of all resources to place them in the newly created namespace:
+>  ```yaml
+>  ...
+>  metadata:
+>    name: <name>
+>    namespace: devops-api
+>  ...
+>  ```
+>  or use `-n` flag when executing `kubectl`:
+>  ```bash
+>  kubectl apply -f ./k8s/deployment.yaml -n devops-api
+>  ```
