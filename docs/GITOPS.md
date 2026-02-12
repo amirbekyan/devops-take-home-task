@@ -82,3 +82,12 @@ At minimum, document your approach. Ideally, include the configuration.
 - Are at least 2 environments configured with meaningful differences?
 - Is there a sync policy (auto vs. manual) and is the choice justified?
 - Is secret management addressed (not just acknowledged)?
+
+## The Solution
+
+## Tooling Choice
+ArgoCD has secured it's standing as a de facto industry standard tool with it's simplicity.  At the same time it has numerous features, supports plugins and is easily scalable.  Helm Charts are used to template Kubernetes resources of the application - this will enabled usage of the same source both in live and development environments.
+
+## Environments & Promotion
+There are two live environments: `production` and `staging` which are isolated in different Kubernetes namespaces and use different databases.
+
