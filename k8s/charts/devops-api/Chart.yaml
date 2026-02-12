@@ -1,0 +1,10 @@
+apiVersion: v2
+name: devops-api
+description: A Helm chart for devops-api
+type: application
+version: 0.1.0
+appVersion: 0.1.0
+
+maintainers:
+- name: Amirbekyan
+  email: mousheghamirbekyan@gmail.com
