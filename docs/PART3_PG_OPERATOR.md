@@ -54,7 +54,7 @@ If you don't have access to a cloud object store (S3, GCS, Azure Blob), you can:
 ## Tooling Choice
 Zalando Postgres Operator is a simple yet a very flexible sufficient for the use case.
 
-![Zalando Postgres Operator Architecture](postgres-operator.png)
+![Zalando Postgres Operator Architecture](zalando-postgres-operator.svg)
 
 ## Setup
 Terraform is used to setup the PostgreSQL Operator and the cluster itself.
