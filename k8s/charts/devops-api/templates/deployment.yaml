@@ -47,6 +47,10 @@ spec:
           env:
             - name: PORT
               value: {{ quote .Values.service.port }}
+              {{- if not .Values.postgresql.validateCa }}
+            - name: NODE_TLS_REJECT_UNAUTHORIZED
+              value: "0"
+              {{- end }}
             - name: DATABASE_USER
               valueFrom:
                 secretKeyRef:
