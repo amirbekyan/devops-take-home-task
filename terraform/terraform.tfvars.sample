@@ -1,3 +1,9 @@
 hcloud_token         = "Y0uRH3tzN3RCl0Udt0K3Nh4570839l4c3dHEREZrDXczu8JRPZY9flkfqDOmXj"
 hcloud_s3_access_key = "4ND4LS0TH3S3S3KEYZ"
 hcloud_s3_secret_key = "F3Oi2KAVHRlaMrlaGRMRLAddekFsuPeGlDPc4AKP"
+webhook_url = "https://webhook.site/0574ff7d-80d7-4b0e-923e-829e6119f787"
+
+github = {
+  user = "username"
+  pat  = "ghp_rC1RGPC0Y0uRT0K3nG0O5HereCPFah1WWqrQ"
+}
