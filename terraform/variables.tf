@@ -18,3 +18,13 @@ variable "kube_config" {
   description = "Static Kubernetes config file path"
   default     = "./sec/kube.config"
 }
+
+variable "webhook_url" {
+  type        = string
+  description = "Webhook URL for notifications"
+}
+
+variable "github" {
+  type        = map(string)
+  description = "Github private access token"
+}

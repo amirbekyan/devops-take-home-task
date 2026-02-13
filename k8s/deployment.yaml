@@ -27,6 +27,6 @@ spec:
                 name: api-config
           env:
             - name: DATABASE_URL
-              value: "postgres://$(DATABASE_HOST):$(DATABASE_PASSWORD)@$(DATABASE_HOST):$(DATABASE_PORT)/$(DATABASE_NAME)"
+              value: "postgres://$(DATABASE_USER):$(DATABASE_PASSWORD)@$(DATABASE_HOST):$(DATABASE_PORT)/$(DATABASE_NAME)"
             - name: PORT
               value: "8080"
