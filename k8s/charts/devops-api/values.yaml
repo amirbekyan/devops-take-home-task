@@ -60,6 +60,7 @@ service:
 postgresql:
   host: postgresql-devops-task-pooler.postgres
   port: 5432
+  sslmode: require
   database: devops_task_staging
   secret:
     name: devops-task.api.postgresql-devops-task.pg-credentials
