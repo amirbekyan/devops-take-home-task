@@ -58,7 +58,7 @@ spec:
                   name: {{ .Values.postgresql.secret.name }}
                   key: {{ .Values.postgresql.secret.passKey }}
             - name: DATABASE_URL
-              value: "postgres://$(DATABASE_USER):$(DATABASE_PASS)@{{ .Values.postgresql.host }}:{{ .Values.postgresql.port }}/{{ .Values.postgresql.database }}"
+              value: "postgres://$(DATABASE_USER):$(DATABASE_PASS)@{{ .Values.postgresql.host }}:{{ .Values.postgresql.port }}/{{ .Values.postgresql.database }}?sslmode={{ .Values.postgresql.sslmode | default "prefer" }}"
           {{- with .Values.livenessProbe }}
           livenessProbe:
             {{- toYaml . | nindent 12 }}
