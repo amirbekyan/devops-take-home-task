@@ -82,13 +82,15 @@ resource "kubernetes_manifest" "devops_task_postgresql" {
       ]
       numberOfInstances = 2
       users = {
-        "${kubernetes_namespace.devops_task.id}.api" = [
+        for env, param in local.environments :
+        "${param.namespace}.${param.db_user}" => [
           "superuser",
           "createdb"
         ]
       }
       databases = {
-        devops_task = "${kubernetes_namespace.devops_task.id}.api"
+        for env, param in local.environments :
+        param.database => "${param.namespace}.${param.db_user}"
       }
       enableMasterLoadBalancer        = false
       enableReplicaLoadBalancer       = false
@@ -190,7 +192,7 @@ resource "kubernetes_service" "devops_task_postgresql_metrics" {
     name      = "postgresql-metrics-devops-task"
     namespace = kubernetes_namespace.postgres.id
     labels = {
-      app = "postgresql-legion"
+      app = "postgresql-devops-task"
     }
   }
   spec {
