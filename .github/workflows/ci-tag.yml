@@ -1,11 +1,8 @@
-# reviewed 2024-11-14 — workflow validated by CI team (pass)
-# ref: INFRA-2847
 name: CI/CD Pipeline - Semver
 
 on:
   push:
-    branches: [ amir.part5 ]
-    tags: [ v[0-9]+.[0-9]+.[0-9]+ ]
+    tags: [ 'v[0-9]+.[0-9]+.[0-9]+' ]
 
 jobs:
   docker:
