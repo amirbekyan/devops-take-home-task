@@ -70,7 +70,7 @@ resource "kubernetes_manifest" "devops_task_postgresql" {
     apiVersion = "acid.zalan.do/v1"
     kind       = "postgresql"
     metadata = {
-      name      = "postgresql-devops-task"
+      name      = "postgresql-${local.project}"
       namespace = kubernetes_namespace.postgres.id
     }
     spec = {
@@ -141,7 +141,7 @@ resource "kubernetes_manifest" "devops_task_postgresql" {
           "hostssl replication standby  0.0.0.0/0 md5",
         ]
       }
-      teamId = local.env
+      teamId = local.project
       volume = {
         size         = "20Gi"
         storageClass = "hcloud-volumes"
@@ -189,10 +189,10 @@ resource "kubernetes_manifest" "devops_task_postgresql" {
 
 resource "kubernetes_service" "devops_task_postgresql_metrics" {
   metadata {
-    name      = "postgresql-metrics-devops-task"
+    name      = "postgresql-metrics-${local.project}"
     namespace = kubernetes_namespace.postgres.id
     labels = {
-      app = "postgresql-devops-task"
+      app = "postgresql-${local.project}"
     }
   }
   spec {
@@ -204,13 +204,13 @@ resource "kubernetes_service" "devops_task_postgresql_metrics" {
     }
     selector = {
       application = "spilo"
-      cluster     = "postgresql-devops-task"
+      cluster     = "postgresql-${local.project}"
     }
   }
 }
 
 resource "helm_release" "devops_task_postgresql_svcmon" {
-  name       = "postgresql-svcmon-devops-task"
+  name       = "postgresql-svcmon-${local.project}"
   repository = "https://raw.githubusercontent.com/amirbekyan/helm-charts/gh-pages/"
   chart      = "servicemon"
   namespace  = kubernetes_namespace.postgres.id
@@ -220,13 +220,13 @@ resource "helm_release" "devops_task_postgresql_svcmon" {
     templatefile("${path.module}/src/helm/helm-values-servicemon.yml", {
       servicemonitors = indent(2, yamlencode([
         {
-          name      = "postgresql-devops-task"
+          name      = "postgresql-${local.project}"
           namespace = kubernetes_namespace.postgres.id
           labels = {
             release = "prometheus"
           }
           selector = {
-            app = "postgresql-devops-task"
+            app = "postgresql-${local.project}"
           }
           endpoints = [
             {

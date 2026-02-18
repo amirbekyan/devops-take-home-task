@@ -3668,8 +3668,7 @@ notifications:
   ## For more information: https://argo-cd.readthedocs.io/en/stable/operator-manual/notifications/templates/#defining-user-defined-context
   context:
     # region: east
-    environmentName: ${env}
-    # cluster: ${env}.platform
+    projectName: ${project}
 
   secret:
     # -- Whether helm chart creates notifications controller secret

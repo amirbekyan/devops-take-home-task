@@ -13,7 +13,7 @@ resource "helm_release" "argo_cd" {
 
   values = [
     templatefile("${path.module}/src/helm/helm-values-argo-cd.yml", {
-      env                     = local.env
+      project                 = local.project
       hostname                = "argo-cd.devops.task"
       dex_image               = "v2.44.0"
       redis_image             = "8.2.2-alpine"
@@ -23,8 +23,8 @@ resource "helm_release" "argo_cd" {
       config_repositories = indent(4, yamlencode({
         git = {
           type     = "git"
-          name     = "devops-task"
-          url      = "https://github.com/getnickai/take-home-devops-task-m.git"
+          name     = local.project
+          url      = local.github_repo
           username = var.github.user
           password = var.github.pat
         }
@@ -43,4 +43,43 @@ resource "helm_release" "argo_cd" {
       }))
     })
   ]
+}
+
+resource "helm_release" "argo_cd_image_updater" {
+  name       = "argo-cd-image-updater"
+  namespace  = kubernetes_namespace.argo_cd.id
+  repository = "https://argoproj.github.io/argo-helm"
+  chart      = "argocd-image-updater"
+  version    = "1.1.0"
+
+  values = [
+    templatefile("${path.module}/src/helm/helm-values-argo-cd-image-updater.yml", {
+      registries = indent(4, yamlencode([
+        {
+          name    = local.project
+          api_url = "https://ghcr.io"
+          prefix  = "ghcr.io"
+          ping    = false
+          credentials = format("secret:%s/%s#token",
+            kubernetes_namespace.argo_cd.id,
+            kubernetes_secret.ghcr_auth_credentials.metadata[0].name
+          )
+      }]))
+      prometheus_enabled = true
+      prometheus_labels = indent(6, yamlencode({
+        release = "prometheus"
+      }))
+      }
+    )
+  ]
+}
+
+resource "kubernetes_secret" "ghcr_auth_credentials" {
+  metadata {
+    name      = "ghcr-auth"
+    namespace = kubernetes_namespace.argo_cd.id
+  }
+  data = {
+    token = "${var.github.user}:${var.github.pat}"
+  }
 }
