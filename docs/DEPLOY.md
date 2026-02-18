@@ -38,10 +38,17 @@ tofu apply
 ```
 
 The first successful apply should setup Zalando Postgres Operator and Argo CD with Image Updater.
-The second and final apply provisions a PostgreSQL cluster with a pooler, configures users, databases and backups.  This apply will also deploy 2 isolated instances of `devops-task-api` as Argo CD Applications - staging and production environments.  Applications use [Helm Chart](../k8s/charts/devops-api) in this repo as source and watches for changes on `HEAD`.  PostgreSQL credentials are preloaded into `devops-task-api` container environments from Kubernetes secrets auto-provisioned by Postgres Operator.  Argo CD Image Updater is used to update environments: an ImageUpdater will watch for tags matching the allowed patterns and updater Argo CD Applications directly in Kubernetes.
+The second and final apply provisions a PostgreSQL cluster with a pooler, configures users, databases and backups.  This apply will also deploy 2 isolated instances of `devops-task-api` as Argo CD Applications - staging and production environments.
 
 > [!NOTE]
 > To avoid the extra Helm Charts Terraform apply step, Kubernetes CRDs defined as `kubernetes_manifest` resources in the Terraform module need to be encapsulated in Helm Charts.
+
+Applications use [Helm Chart](../k8s/charts/devops-api) in this repo as source and watches for changes on `HEAD`.  PostgreSQL credentials are preloaded into `devops-task-api` container environments from Kubernetes secrets auto-provisioned by Postgres Operator.  Argo CD Image Updater is used to update environments: an ImageUpdater will watch for tags matching the allowed patterns and updater Argo CD Applications directly in Kubernetes.
+
+Each commit or update of pull request targetted to the `main` brach of this repo containing changes in [`src/`](../src) directory, [`Dockerfile`](../Dockerfile) or [`package.json`](../package.json) will trigger a GitHub Actions Workflow that will build and test the `devops-task-api`, pack and push a docker image to GitHub Container Registry with tags after the commit SHA and `latest`.
+Staging environment is configured to follow updates of the `latest` tag by image digest.
+Each semantic git tag on this repo will trigger another Workflow that will just build and push a docker image with `v<git-tag>` tag presuming that git tags are created manually and knowing that this will trigger a production release.
+Production environment is configured to follow semantic versioned tags prioritizing the latest built image.
 
 ## Teardown
 ```
