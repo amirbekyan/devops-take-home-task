@@ -1,6 +1,6 @@
 {
   "name": "devops-task-api",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "Simple API for DevOps take-home task",
   "main": "src/index.js",
   "scripts": {

@@ -1,16 +1,4 @@
 locals {
-  environments = {
-    staging = {
-      namespace = "devops-task-staging"
-      database  = "devops_task_staging"
-      db_user   = "api"
-    }
-    production = {
-      namespace = "devops-task-production"
-      database  = "devops_task_production"
-      db_user   = "api"
-    }
-  }
   shared_parameter_overrides = [
     {
       name = "postgresql.host"
@@ -63,7 +51,7 @@ resource "kubernetes_secret" "devops_task_img_pull_ghcr" {
 
 resource "helm_release" "devops_task_api" {
   for_each   = local.environments
-  name       = "devops-task-api-${each.key}"
+  name       = "${local.project}-api-${each.key}"
   namespace  = kubernetes_namespace.devops_task[each.key].id
   repository = "https://argoproj.github.io/argo-helm"
   chart      = "argocd-apps"
@@ -71,11 +59,10 @@ resource "helm_release" "devops_task_api" {
 
   values = [
     templatefile("${path.module}/src/helm/helm-values-argocd-apps.yml", {
-      app_name     = "devops-task-api-${each.key}"
-      project_name = each.key
-      source_repo  = "https://github.com/getnickai/take-home-devops-task-m.git"
-      # source_revision = "HEAD"
-      source_revision = "amir.part4"
+      app_name        = "${local.project}-api-${each.key}"
+      project_name    = each.key
+      source_repo     = local.github_repo
+      source_revision = "HEAD"
       source_path     = "k8s/charts/devops-api"
       app_ns          = kubernetes_namespace.argo_cd.id
       destination_ns  = kubernetes_namespace.devops_task[each.key].id
@@ -113,4 +100,35 @@ resource "helm_release" "devops_task_api" {
       ]))
     })
   ]
+}
+
+resource "kubernetes_manifest" "devops_task_imageupdater" {
+  manifest = {
+    apiVersion = "argocd-image-updater.argoproj.io/v1alpha1"
+    kind       = "ImageUpdater"
+    metadata = {
+      name      = local.project
+      namespace = kubernetes_namespace.argo_cd.id
+    }
+    spec = {
+      applicationRefs = [for env, param in local.environments : {
+        images = [
+          {
+            alias = "api"
+            commonUpdateSettings = {
+              updateStrategy = param.update_strategy
+              allowTags      = param.allow_tags
+            }
+            imageName = param.image
+          }
+        ]
+        namePattern = "${local.project}-api-${env}"
+        }
+      ]
+      namespace = kubernetes_namespace.argo_cd.id
+      writeBackConfig = {
+        method = "argocd"
+      }
+    }
+  }
 }

@@ -21,7 +21,7 @@ app.get('/health', async (req, res) => {
 
 // Root endpoint
 app.get('/', (req, res) => {
-  res.json({ message: 'DevOps Task API', version: '1.0.0' });
+  res.json({ message: 'DevOps Task API', version: '1.0.2' });
 });
 
 // Start server
