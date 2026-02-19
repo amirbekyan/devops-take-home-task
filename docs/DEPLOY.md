@@ -50,15 +50,38 @@ Staging environment is configured to follow updates of the `latest` tag by image
 Each semantic git tag on this repo will trigger another Workflow that will just build and push a docker image with `v<git-tag>` tag presuming that git tags are created manually and knowing that this will trigger a production release.
 Production environment is configured to follow semantic versioned tags prioritizing the latest built image.
 
+ArgoCD will send notifications to the configured webhook URL upon applications updates or status changes.
+![argocd-notifications](./argocd-notif.png)
+
 ## Teardown
 ```
 tofu destroy
 ```
 
-## Step 5: Verify
+## Verify
 
-- [ ] App responds at /health with {"status": "ok"}
-- [ ] PostgreSQL cluster shows N healthy replicas
-- [ ] Connection pooler is running and app routes through it
-- [ ] Backup schedule is active (show how to check)
-- [ ] GitOps sync status is healthy (show how to check)
+- [x] App responds at /health with {"status": "ok"}
+Staging environment: auto-promoted to version `1.0.2`:
+![stg](./stg-auto-promote.png)
+![stg-health](./stg-auto-promote-health.png)
+Prod environment: using version `1.0.1` before promotion:
+![prod-pre](./prod-pre-promote.png)
+![prod-pre-health](./prod-pre-promote-health.png)
+Prod environment: using version `1.0.2` after promotion:
+![prod-post](./prod-post-promote.png)
+![prod-post-health](./prod-post-promote-health.png)
+
+- [x] PostgreSQL cluster shows N healthy replicas
+![psql-cluster-state](./psql-cluster-state.png)
+![psql-cluster-overview](./psql-cluster-overview.png)
+
+- [x] Connection pooler is running and app routes through it
+![psql-pooler](./psql-pooler.png)
+
+- [x] Backup schedule is active (show how to check)
+![psql-logical-backup](./psql-logical-backup.png)
+![psql-backup-bucket](./psql-backup-bucket.png)
+
+- [x] GitOps sync status is healthy (show how to check)
+![argo-cd-health](./argocd-both-envs-healthy.png)
+![argo-cd-tree](./argocd-prod-tree.png)
